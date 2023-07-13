@@ -10,7 +10,7 @@
         <div class="msg">
             <div class="date">
                 <span>标签</span>
-                <span>闹钟</span>
+                <input type="text" v-model="params.message">
             </div>
             <div class="label">
                 <span>日期</span>
@@ -61,6 +61,9 @@ export default {
             this.params[type] = this.params[type] < 10 ? `0${num}` : num
         },
         submit() {
+            if (!this.params.message) {
+                this.params.message = '闹钟'
+            }
             clockList[this.$route.query.idx] = Object.assign(clockList[this.$route.query.idx], this.params)
             this.$router.push({
                 path: '/clock'
@@ -72,7 +75,7 @@ export default {
 
 <style scoped>
 .clock {
-    background: #353535;
+    background: #201f1f;
     min-height: calc(100vh - 32px);
     padding: 16px 24px;
     display: flex;
@@ -112,23 +115,46 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 80%;
+    width: 90%;
+    padding: 0 40px;
+    background: #353535;
+    border-radius: 10px;
+    margin-top: 40px;
 }
 
-/* .msg input {
-    outline-style: none;
-    height: 30px;
-    font-size: 18px;
-    width: 80%;
-} */
 
-.msg .date,.label {
+
+.msg .date {
+    border-bottom: 1px solid #535353;
+}
+.msg .date,
+.msg .label {
+    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 14px 30px;
 }
 
+.msg .date span:first-child,
+.msg .label span:first-child {
+    color: #fff;
+}
 
+.msg .date span:last-child,
+.msg .label span:last-child {
+    color: #929292;
+}
+
+.msg input {
+    outline-style: none;
+    height: 30px;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    color: #929292;
+    text-align: right;
+}
 
 .btn {
     position: absolute;

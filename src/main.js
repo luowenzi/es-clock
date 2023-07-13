@@ -5,6 +5,8 @@ import App from './App.vue';
 import VueRouter from 'vue-router'
 import HelloWorld from "./components/HelloWorld.vue";
 import Index from "./components/Index.vue";
+import clock from "./components/clock.vue";
+import setClock from "./components/setClock.vue";
 
 Vue.use(ElementUI);
 Vue.use(VueRouter)
@@ -19,6 +21,8 @@ Vue.config.productionTip = false
 const routes = [
   { path: '/', component: Index },
   { path: '/hello', component: HelloWorld },
+  { path: '/clock', component: clock },
+  { path: '/setClock', component: setClock },
 ]
 
 // 3. 创建 router 实例，然后传 `routes` 配置

@@ -86,6 +86,7 @@ const clockList = [
     clock: "06",
     minute: "00",
     message: "闹钟",
+    videoIndex: 1
   },
 ];
 export default {
@@ -106,7 +107,7 @@ export default {
       drawer: false,
       clockDrawer: false,
       showArrow: false,
-      clockScene: "起床",
+      clockScene: "闹钟",
       videoIndex: 0,
       isSetClock: false,
       clockIndex: -1,
@@ -157,6 +158,7 @@ export default {
           this.clockList.push(Object.assign({}, this.clockItem, clockData));
         }
       }
+      this.clockScene = clockData.message
     },
     confirm(list) {
       this.clockList = list;
@@ -166,8 +168,13 @@ export default {
     setClockIndex(index) {
       this.isSetClock = true;
       this.clockIndex = index;
-      this.clockItem =
-        index === -1 ? cloneDeep(clockList[0]) : this.clockList[index];
+      if (index === -1) {
+        this.clockItem = cloneDeep(clockList[0]);
+      } else {
+        this.clockItem = this.clockList[index];
+        this.clockScene = this.clockItem.message
+      }
+      this.clockItem.videoIndex = this.videoIndex
     },
     beforeDrawerClose() {
       this.drawer = false;
@@ -196,6 +203,9 @@ export default {
             item.status
           ) {
             this.lastRing = item;
+            this.$refs.video[this.videoIndex].muted = true
+            this.clockScene = item.message
+            this.videoIndex = item.videoIndex
             return true;
           }
         });

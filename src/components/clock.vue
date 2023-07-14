@@ -1,61 +1,88 @@
 <template>
-    <div class="clock">
-        <ul>
-            <li v-for="(item, idx) in clockList" :key="idx">
-                <p class="time" @click="jumpSet(item, idx)">{{ item.clock }}: {{ item.minute }}</p>
-                <p class="message" @click="jumpSet(item, idx)">{{ item.message }}</p>
-                <el-switch v-model="item.status" active-color="#13ce66" inactive-color="#000000"></el-switch>
-            </li>
-        </ul>
+  <div class="clock">
+    <ul>
+      <li v-for="(item, idx) in clockArray" :key="idx">
+        <p class="time" @click="setClockIndex(idx)">
+          {{ item.clock }}: {{ item.minute }}
+        </p>
+        <p class="message" @click="setClockIndex(idx)">{{ item.message }}</p>
+        <el-switch
+          v-model="item.status"
+          active-color="#13ce66"
+          inactive-color="#000000"
+        ></el-switch>
+      </li>
+    </ul>
+    <div class="buttons">
+      <el-button class="options-btn" @click="confirm(clockArray)">确定</el-button>
     </div>
+  </div>
 </template>
 
 <script>
-import { clockList } from './clock'
+import { cloneDeep } from 'lodash'
 export default {
-    data() {
-        return {
-            clockList
-        }
+  props: {
+    clockList: {
+      type: Array,
+      default: () => [],
     },
-    methods: {
-        jumpSet(item, idx) {
-            this.$router.push({
-                path: '/setClock',
-                query: {
-                    idx
-                }
-            })
-        }
+    setClockIndex: {
+      type: Function,
+      default: () => () => {},
+    },
+    confirm: {
+      type: Function,
+      default: () => () => {},
+    },
+  },
+  data() {
+    return {
+        clockArray: []
     }
-}
+  },
+  watch: {
+    clockList: {
+        handler(list) {
+            this.clockArray = cloneDeep(list)
+        },
+        immediate: true
+    }
+  },
+};
 </script>
 
 <style scoped>
 .clock {
-    background: #353535;
-    min-height: 100vh;
-    padding: 16px 24px;
+  padding: 54px;
 }
 
 ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
 }
 
 li {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 p {
-    margin-right: 20px;
-    color: #fff;
-    width: 10%;
+  margin-right: 20px;
+  color: #fff;
+  width: 10%;
+}
+
+.time {
+  font-size: 40px;
+}
+
+.message {
+  font-size: 20px;
 }
 </style>

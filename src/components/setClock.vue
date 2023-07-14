@@ -31,9 +31,7 @@
       <div>
         <el-button class="options-btn" @click="setClockFn()">返回</el-button>
       </div>
-      <el-button class="options-btn" @click="confirm"
-        >确定</el-button
-      >
+      <el-button class="options-btn" @click="confirm">确定</el-button>
     </div>
   </div>
 </template>
@@ -60,10 +58,13 @@ export default {
     };
   },
   watch: {
-    clockItem(item) {
-      Object.keys(this.params).forEach((key) => {
-        this.params[key] = item[key];
-      });
+    clockItem: {
+      handler(item) {
+        Object.keys(this.params).forEach((key) => {
+          this.params[key] = item[key];
+        });
+      },
+      immediate: true,
     },
   },
 
@@ -92,7 +93,7 @@ export default {
       if (!this.params.message) {
         this.params.message = "闹钟";
       }
-      this.setClockFn(this.params)
+      this.setClockFn(this.params);
     },
   },
 };

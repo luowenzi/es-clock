@@ -1,7 +1,7 @@
 <template>
   <div class="clock">
     <ul>
-      <li v-for="(item, idx) in clockArray" :key="idx">
+      <li v-for="(item, idx) in clockArray" :key="item.clock + item.minute + item.message">
         <p class="time" @click="setClockIndex(idx)">
           {{ item.clock }}: {{ item.minute }}
         </p>
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash'
 export default {
   props: {
     clockList: {
@@ -44,7 +43,7 @@ export default {
   watch: {
     clockList: {
         handler(list) {
-            this.clockArray = cloneDeep(list)
+            this.clockArray = list
         },
         immediate: true
     }

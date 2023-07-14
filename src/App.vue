@@ -39,6 +39,7 @@
       custom-class="setting-drawer"
       :modal="false"
       :before-close="beforeDrawerClose"
+      :close-on-press-escape="false"
     >
       <p class="clock-scene">场景闹钟</p>
       <p class="clock-scene small-scene">| {{ clockScene }}</p>
@@ -50,6 +51,8 @@
       custom-class="clock-drawer"
       :with-header="false"
       :destroy-on-close="true"
+      :wrapperClosable="false"
+      :close-on-press-escape="false"
     >
       <el-collapse-transition>
         <div v-show="!isSetClock">
@@ -86,7 +89,7 @@ const clockList = [
     clock: "06",
     minute: "00",
     message: "闹钟",
-    videoIndex: 1
+    videoIndex: 1,
   },
 ];
 export default {
@@ -127,8 +130,10 @@ export default {
         cancelButtonText: "取消",
         type: "info",
       }).then(() => {
+        this.$refs.video.forEach((video) => {
+          video.muted = false;
+        });
         this.$refs.video[this.videoIndex].play();
-        this.$refs.video[this.videoIndex].muted = false;
       });
     }, 3000);
   },
@@ -143,11 +148,10 @@ export default {
       this.$refs.video[this.videoIndex].muted = true;
     },
     changeVideoIndex(val) {
-      this.$refs.video[this.videoIndex].muted = true;
-      this.$refs.video[this.videoIndex].play();
-      this.$refs.video[this.videoIndex + 1].play();
-      this.$refs.video[this.videoIndex + 1].muted = false;
+      this.$refs.video[this.videoIndex].pause();
       this.videoIndex += val;
+      this.$refs.video[this.videoIndex].play();
+      this.$refs.video[this.videoIndex].muted = false;
     },
     setClockFn(clockData) {
       this.isSetClock = !this.isSetClock;
@@ -158,7 +162,7 @@ export default {
           this.clockList.push(Object.assign({}, this.clockItem, clockData));
         }
       }
-      this.clockScene = clockData.message
+      this.clockScene = clockData.message;
     },
     confirm(list) {
       this.clockList = list;
@@ -172,9 +176,9 @@ export default {
         this.clockItem = cloneDeep(clockList[0]);
       } else {
         this.clockItem = this.clockList[index];
-        this.clockScene = this.clockItem.message
+        this.clockScene = this.clockItem.message;
       }
-      this.clockItem.videoIndex = this.videoIndex
+      this.clockItem.videoIndex = this.videoIndex;
     },
     beforeDrawerClose() {
       this.drawer = false;
@@ -203,16 +207,17 @@ export default {
             item.status
           ) {
             this.lastRing = item;
-            this.$refs.video[this.videoIndex].muted = true
-            this.clockScene = item.message
-            this.videoIndex = item.videoIndex
+            this.$refs.video[this.videoIndex].pause();
+            this.clockScene = item.message;
+            this.videoIndex = item.videoIndex;
             return true;
           }
         });
         if (isTimeOut) {
           const video = this.$refs.video[this.videoIndex];
           video.muted = false;
-          this.drawer = false
+          video.play();
+          this.drawer = false;
           this.showArrow = false;
         }
       }

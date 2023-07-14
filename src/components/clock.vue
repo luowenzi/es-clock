@@ -75,7 +75,6 @@ li {
 p {
   margin-right: 20px;
   color: #fff;
-  width: 10%;
 }
 
 .time {
